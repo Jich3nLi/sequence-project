@@ -18,6 +18,29 @@
 // elements it had to copy. Do not compute the answers from the growth formula
 // alone.
 GrowthStats measure_growth(double factor, std::size_t n) {
-    // TODO
-    throw std::logic_error("measure_growth() not implemented");
+    double old_factor = Vector<int>::growth_factor;
+    Vector<int>::growth_factor = factor;
+
+    GrowthStats stats;
+
+    Vector<int> v;
+
+    for (std::size_t i = 0; i < n; i++) {
+        std::size_t old_size = v.size();
+	std::size_t old_capacity = v.capacity();
+
+	v.push_back(static_cast<int>(i));
+
+	if (v.capacity() > old_capacity) {
+	    stats.reallocations++;
+	    stats.elements_copied += old_size;
+	}
+    }
+
+    stats.final_capacity = v.capacity();
+
+    Vector<int>::growth_factor = old_factor;
+
+    return stats;
+
 }
